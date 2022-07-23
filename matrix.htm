@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			body {
+				font-family: modern;
+				font-size: 20px;
+				background: black;
+				text-shadow: 0 0 5px lime;
+				overflow: hidden;
+				display: flex;
+				justify-content: center;
+			}
+			div {
+				color: darkgreen;
+				writing-mode: vertical-rl;
+				text-orientation: upright;
+				overflow: hidden;
+				white-space: pre;
+			}
+			p {
+				position: relative;
+				top: -100px;
+				transform: scale(.6, 1);
+				margin: 2px;
+			}
+			span {
+				color: white;
+				transform: scale(.6, 1);
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container"></div>
+		<script type="text/javascript">
+			'use strict'
+			let chars = 'QWERTYUIOPASDFGHJKLZXCVBNM1234567890%<>!?.,;:-_/\\"=^+#$あいうえおかがきぎくぐけげこごさざしじすずせぜそぞただちぢつづてでとどなにぬねのはばぱひびぴふぶぷへべぺほぼぽまみむめもやゆよらりるれろわゐゑをんゔゖ゚゛ゝゞゟアイウエオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワヰヱヲンヴヷヸヹヺ・ヽヾヿ'
+			let divs = []
+			let tops = {}
+			let heights = {}
+			let velocities = {}
+
+			function randomInteger(a, b) {
+				return Math.floor(Math.random() * a) + b
+			}
+
+			function randomText() {
+				let text = ''
+				for (let i = 0; i < 50; i++) {
+					text += chars.charAt(randomInteger(chars.length, 0))
+				}
+				return text
+			}
+
+			function changeText() {
+				let index = 0
+				for (let e of divs) {
+					index++
+					tops[index] = tops[index] === undefined ? 0 : tops[index] + 1
+					heights[index] = heights[index] ?? randomInteger(20, 3)
+					velocities[index] = velocities[index] ?? randomInteger(5, 1)
+					let text = randomText()
+					text = text.slice(0, tops[index] * velocities[index]) + '<span>' + chars.charAt(randomInteger(chars.length, 0)) + '</span>' + ' '.repeat(tops[index] < heights[index] ? tops[index] : heights[index]) + text.slice(tops[index] * velocities[index])
+					e.innerHTML = text
+					if (text.endsWith(' ')) {
+						tops[index] = 0
+						heights[index] = undefined
+						velocities[index] = undefined
+						e.style.color = Math.random() < 0.6 ? 'darkgreen' : 'limegreen'
+					}
+				}
+			}
+
+			function createDivs() {
+				for (let i = 0; i < 45; i++) {
+					let p = document.createElement('p')
+					container.append(p)
+					divs.push(p)
+				}
+			}
+
+			createDivs()
+			setInterval(changeText, 80)
+		</script>
+	</body>
+</html>
